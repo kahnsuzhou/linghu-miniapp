@@ -7,7 +7,9 @@ page {
   box-sizing: border-box;
 }
 
-* { box-sizing: border-box; }
+view, text, input, button, image, scroll-view, swiper, swiper-item {
+  box-sizing: border-box;
+}
 
 /* 通用容器 */
 .container { padding: 24rpx; }
