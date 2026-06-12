@@ -1,0 +1,98 @@
+/* app.wxss - 全局样式 */
+page {
+  background-color: #F5F5F5;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+  color: #333;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+
+* { box-sizing: border-box; }
+
+/* 通用容器 */
+.container { padding: 24rpx; }
+
+/* 颜色变量替代（小程序不支持CSS变量跨文件，在此定义常用色） */
+/* 主题橙：#FF6B35 */
+/* 文字灰：#888 */
+/* 边框灰：#EBEBEB */
+
+/* 卡片 */
+.card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+}
+
+/* 按钮 */
+.btn-primary {
+  background: #FF6B35;
+  color: #fff;
+  border-radius: 48rpx;
+  text-align: center;
+  padding: 24rpx 0;
+  font-size: 32rpx;
+  font-weight: 600;
+  border: none;
+}
+.btn-primary::after { border: none; }
+
+.btn-ghost {
+  background: transparent;
+  color: #FF6B35;
+  border: 2rpx solid #FF6B35;
+  border-radius: 48rpx;
+  text-align: center;
+  padding: 20rpx 0;
+  font-size: 28rpx;
+}
+.btn-ghost::after { border: none; }
+
+/* 标签 */
+.tag {
+  display: inline-block;
+  padding: 4rpx 12rpx;
+  border-radius: 6rpx;
+  font-size: 22rpx;
+}
+.tag-orange { background: #FFF3EE; color: #FF6B35; }
+.tag-green  { background: #EAFAF0; color: #18B566; }
+.tag-grey   { background: #F5F5F5; color: #888;    }
+.tag-red    { background: #FFF0F0; color: #E53935; }
+
+/* 分割线 */
+.divider {
+  height: 1rpx;
+  background: #EBEBEB;
+  margin: 20rpx 0;
+}
+
+/* 空状态 */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 0;
+  color: #bbb;
+}
+.empty-icon { font-size: 100rpx; margin-bottom: 20rpx; }
+.empty-text { font-size: 28rpx; }
+
+/* 价格 */
+.price {
+  color: #FF6B35;
+  font-weight: 700;
+}
+.price-symbol { font-size: 24rpx; }
+.price-num    { font-size: 40rpx; }
+
+/* 加载 */
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 60rpx;
+  color: #bbb;
+  font-size: 26rpx;
+}

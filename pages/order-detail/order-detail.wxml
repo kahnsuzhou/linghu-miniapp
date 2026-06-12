@@ -1,0 +1,107 @@
+<!-- pages/order-detail/order-detail.wxml -->
+<view class="container">
+
+  <!-- 加载 -->
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="loading-spinner"></view>
+  </view>
+
+  <block wx:elif="{{order}}">
+
+    <!-- 状态横幅 -->
+    <view class="status-banner" style="background: {{order.statusColor}}22; border-color: {{order.statusColor}}44;">
+      <view class="status-main">
+        <text class="status-label" style="color: {{order.statusColor}}">{{order.statusLabel}}</text>
+        <text wx:if="{{order.statusDesc}}" class="status-desc">{{order.statusDesc}}</text>
+      </view>
+    </view>
+
+    <!-- 自提码（核心区域） -->
+    <view wx:if="{{order.showPickup}}" class="pickup-card">
+      <view class="pickup-header">
+        <text class="pickup-title">📋 自提码</text>
+        <text class="pickup-hint">请出示此码至仓库核销</text>
+      </view>
+      <view class="pickup-code-wrap">
+        <text class="pickup-code">{{order.pickupCodeDisplay}}</text>
+      </view>
+      <!-- 简易二维码：通过微信 wx.showQRCode 或显示数字码 -->
+      <button class="btn-copy-code" bindtap="copyPickupCode">复制自提码</button>
+      <view class="pickup-location">
+        <text class="loc-icon">📍</text>
+        <view class="loc-info">
+          <text class="loc-name">{{order.warehouseName || '灵狐仓库'}}</text>
+          <text class="loc-addr">{{order.warehouseAddress || ''}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 商品列表 -->
+    <view class="section-card">
+      <view class="section-title">商品信息</view>
+      <view wx:for="{{order.itemList}}" wx:key="id" class="item-row">
+        <image class="item-thumb" src="{{item.thumb}}" mode="aspectFill" />
+        <view class="item-info">
+          <text class="item-name">{{item.productName || item.name}}</text>
+          <text class="item-spec" wx:if="{{item.spec}}">{{item.spec}}</text>
+        </view>
+        <view class="item-price-qty">
+          <text class="item-price">¥{{item.priceStr}}</text>
+          <text class="item-qty">×{{item.quantity}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 金额明细 -->
+    <view class="section-card">
+      <view class="amount-row">
+        <text class="al">商品合计</text>
+        <text class="av">¥{{order.originalAmount || order.priceStr}}</text>
+      </view>
+      <view wx:if="{{order.discountAmount > 0}}" class="amount-row">
+        <text class="al">优惠券</text>
+        <text class="av orange">-¥{{order.discountAmount}}</text>
+      </view>
+      <view class="amount-row total-row">
+        <text class="al bold">实付金额</text>
+        <text class="av total">¥{{order.priceStr}}</text>
+      </view>
+    </view>
+
+    <!-- 订单信息 -->
+    <view class="section-card">
+      <view class="section-title">订单信息</view>
+      <view class="info-row">
+        <text class="il">订单编号</text>
+        <view class="ir-wrap">
+          <text class="ir">{{order.orderSn}}</text>
+          <text class="copy-btn" bindtap="copyOrderSn">复制</text>
+        </view>
+      </view>
+      <view class="info-row">
+        <text class="il">下单时间</text>
+        <text class="ir">{{order.timeStr}}</text>
+      </view>
+      <view class="info-row" wx:if="{{order.remark}}">
+        <text class="il">备注</text>
+        <text class="ir">{{order.remark}}</text>
+      </view>
+    </view>
+
+    <!-- 底部操作 -->
+    <view class="action-bar">
+      <button class="btn-service" bindtap="contactService">联系客服</button>
+      <button wx:if="{{order.status === 'PENDING_PAYMENT'}}" class="btn-cancel" bindtap="cancelOrder">取消订单</button>
+    </view>
+
+    <view style="height: 40rpx;"></view>
+
+  </block>
+
+  <!-- 加载失败 -->
+  <view wx:elif="{{!loading}}" class="empty-wrap">
+    <text class="empty-icon">😕</text>
+    <text class="empty-title">订单加载失败</text>
+  </view>
+
+</view>
