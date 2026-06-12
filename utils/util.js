@@ -1,4 +1,6 @@
 // utils/util.js —— 通用工具函数
+const { BASE_URL } = require('./config')
+
 
 /**
  * 格式化价格：12.5 → "12.50"
@@ -43,13 +45,10 @@ function firstImage(images) {
   if (!images) return ''
   try {
     const arr = JSON.parse(images)
-    if (Array.isArray(arr) && arr.length > 0) return arr[0]
-  } catch (e) {
-    // 不是 JSON
-  }
-  // 逗号分隔
-  if (images.includes(',')) return images.split(',')[0].trim()
-  return images
+    if (Array.isArray(arr) && arr.length > 0) return toAbsUrl(arr[0])
+  } catch (e) {}
+  if (images.includes(',')) return toAbsUrl(images.split(',')[0].trim())
+  return toAbsUrl(images)
 }
 
 /**
@@ -59,10 +58,10 @@ function allImages(images) {
   if (!images) return []
   try {
     const arr = JSON.parse(images)
-    if (Array.isArray(arr)) return arr
+    if (Array.isArray(arr)) return arr.map(toAbsUrl)
   } catch (e) {}
-  if (images.includes(',')) return images.split(',').map(s => s.trim())
-  return [images]
+  if (images.includes(',')) return images.split(',').map(s => toAbsUrl(s.trim()))
+  return [toAbsUrl(images)]
 }
 
 /**
@@ -86,12 +85,22 @@ function debounce(fn, delay = 500) {
   }
 }
 
+/**
+ * 相对路径转绝对 URL
+ */
+function toAbsUrl(url) {
+  if (!url) return ''
+  if (url.startsWith('http://') || url.startsWith('https://')) return url
+  return BASE_URL + (url.startsWith('/') ? url : '/' + url)
+}
+
 module.exports = {
   formatPrice,
   formatTime,
   orderStatusInfo,
   firstImage,
   allImages,
+  toAbsUrl,
   formatPickupCode,
   debounce,
 }
