@@ -79,11 +79,17 @@ App({
   },
 
   _wxLogin(code, nickName = '微信用户', avatarUrl = '') {
+    // 开发者工具模拟器中 wx.login 返回的 code 无法通过微信服务器验证
+    // 自动转换为 dev_ 前缀，后端会跳过微信验证直接登录
+    const isDev = code && (code.length < 10 || code.startsWith('0') === false)
+    const finalCode = (typeof __wxConfig !== 'undefined' && __wxConfig.envVersion === 'develop')
+      ? 'dev_' + code
+      : code
     return new Promise((resolve, reject) => {
       wx.request({
         url: `${BASE_URL}/api/auth/wx-miniapp`,
         method: 'POST',
-        data: { code, nickName, avatarUrl },
+        data: { code: finalCode, nickName, avatarUrl },
         success: (res) => {
           if (res.data.code === 200) {
             const data = res.data.data
