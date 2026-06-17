@@ -161,7 +161,7 @@ Page({
       .then(res => {
         wx.hideLoading();
         const orderRes = res.data || res;
-        const orderId = orderRes.id || orderRes.orderId;
+        const orderId = orderRes.orderId || orderRes.id;  // 后端返回 orderId 字段
         const orderSn = orderRes.orderSn || orderRes.sn;
 
         // 如果用了优惠券，标记已使用
