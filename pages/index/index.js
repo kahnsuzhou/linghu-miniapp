@@ -60,6 +60,8 @@ Page({
     api.nearbyProducts(loc.lat, loc.lng).then(data => {
       const products = (data || []).map(p => ({
         ...p,
+        id: p.id || p.productId,          // 兼容两种字段名
+        productId: p.productId || p.id,   // wxml 里 data-id 绑定用
         thumb: firstImage(p.images),
         priceStr: formatPrice(p.price),
         stockLow: p.stock > 0 && p.stock <= 5,

@@ -24,6 +24,11 @@ Page({
   },
 
   _loadDetail(id) {
+    if (!id || id === 'undefined') {
+      wx.showToast({ title: '商品不存在', icon: 'error' });
+      setTimeout(() => wx.navigateBack(), 1000);
+      return;
+    }
     this.setData({ loading: true });
     api.productDetail(id)
       .then(res => {
