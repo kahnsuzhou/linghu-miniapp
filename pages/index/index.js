@@ -25,21 +25,16 @@ Page({
   },
 
   _initLocation() {
+    // 先用默认位置加载，避免因位置权限弹窗阻塞首页
+    const defaultLoc = { lat: 39.9042, lng: 116.4074 }
+    this._loadProducts(defaultLoc)
+    // 再尝试获取真实位置（用户已授权时静默获取）
     wx.getSetting({
       success: (res) => {
         if (res.authSetting['scope.userLocation']) {
           this._getLocation()
-        } else {
-          wx.authorize({
-            scope: 'scope.userLocation',
-            success: () => this._getLocation(),
-            fail: () => {
-              // 使用默认位置
-              this._loadProducts({ lat: 39.9042, lng: 116.4074 })
-              wx.showToast({ title: '未授权位置，显示默认商品', icon: 'none' })
-            }
-          })
         }
+        // 未授权时不主动申请，避免弹窗报错
       }
     })
   },
@@ -51,9 +46,12 @@ Page({
         const loc = { lat: res.latitude, lng: res.longitude }
         this.setData({ location: loc, locGranted: true })
         getApp().globalData.location = loc
+        // 用真实位置重新加载
         this._loadProducts(loc)
       },
-      fail: () => this._loadProducts({ lat: 39.9042, lng: 116.4074 })
+      fail: () => {
+        // 获取失败时已有默认位置的数据，不需要再加载
+      }
     })
   },
 

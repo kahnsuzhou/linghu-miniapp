@@ -21,11 +21,15 @@ App({
   },
 
   _initLocation() {
+    // 先设置默认坐标，保证首页不依赖位置权限即可加载
+    this.globalData.location = { lat: 39.9042, lng: 116.4074 }
+    // 已授权时静默获取真实位置
     wx.getSetting({
       success: (res) => {
         if (res.authSetting['scope.userLocation']) {
           this._getLocation()
         }
+        // 未授权时不主动申请，避免触发运行时弹窗
       }
     })
   },
@@ -35,12 +39,10 @@ App({
       type: 'gcj02',
       success: (res) => {
         this.globalData.location = { lat: res.latitude, lng: res.longitude }
-        // 通知首页刷新
         if (this._locationCallback) this._locationCallback(this.globalData.location)
       },
       fail: () => {
-        // 默认北京坐标
-        this.globalData.location = { lat: 39.9042, lng: 116.4074 }
+        // 保持默认坐标
       }
     })
   },
