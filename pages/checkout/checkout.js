@@ -142,10 +142,10 @@ Page({
     this.setData({ submitting: true });
     wx.showLoading({ title: '提交中...' });
 
+    const pid = product.id || product.productId;
+    const wid = selectedWarehouse.id || selectedWarehouse.warehouseId;
     const orderData = {
-      productId: product.id || product.productId,  // 兼容字段名
-      quantity,
-      warehouseId: selectedWarehouse.id,
+      items: [{ productId: pid, quantity, warehouseId: wid }],  // 每个item需带warehouseId
       deliveryMode: 'pickup',
       couponId: selectedCoupon ? selectedCoupon.id : null,
       remark,

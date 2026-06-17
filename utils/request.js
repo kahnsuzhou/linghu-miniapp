@@ -37,7 +37,7 @@ function request(url, method = 'GET', data = {}, auth = true) {
       header,
       timeout: 15000,
       success(res) {
-        console.log(`[RES] ${method} ${fullUrl} → ${res.statusCode}`)
+        console.log(`[RES] ${method} ${fullUrl} → ${res.statusCode}`, res.statusCode >= 400 ? JSON.stringify(res.data) : '')
         const body = res.data
         if (res.statusCode === 401) {
           wx.removeStorageSync('token')
