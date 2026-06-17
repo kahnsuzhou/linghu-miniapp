@@ -41,6 +41,14 @@
       }
     ]
   },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于获取您附近的商品和仓库信息"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation"
+  ],
   "usingComponents": {},
   "sitemapLocation": "sitemap.json",
   "lazyCodeLoading": "requiredComponents"
