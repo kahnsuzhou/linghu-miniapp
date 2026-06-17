@@ -33,6 +33,7 @@ function request(url, method = 'GET', data = {}, auth = true) {
       method,
       data,
       header,
+      timeout: 15000,
       success(res) {
         const body = res.data
         if (res.statusCode === 401) {

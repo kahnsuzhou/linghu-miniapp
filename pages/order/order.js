@@ -111,6 +111,10 @@ Page({
     wx.navigateTo({ url: `/pages/order-detail/order-detail?id=${id}` });
   },
 
+  goShopping() {
+    wx.switchTab({ url: '/pages/index/index' });
+  },
+
   cancelOrder(e) {
     const { id } = e.currentTarget.dataset;
     wx.showModal({
