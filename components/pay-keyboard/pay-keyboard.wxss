@@ -1,0 +1,146 @@
+/* components/pay-keyboard/pay-keyboard.wxss */
+
+.pay-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 500;
+}
+
+.pay-sheet {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: #f5f5f5;
+  border-radius: 32rpx 32rpx 0 0;
+  z-index: 501;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.pay-sheet.show {
+  transform: translateY(0);
+}
+
+/* 头部 */
+.pay-header {
+  background: #fff;
+  border-radius: 32rpx 32rpx 0 0;
+  padding: 32rpx 32rpx 24rpx;
+  position: relative;
+  text-align: center;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+.pay-close {
+  position: absolute;
+  top: 24rpx; left: 28rpx;
+  width: 56rpx; height: 56rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 44rpx;
+  color: #999;
+  line-height: 1;
+}
+.pay-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #222;
+}
+.pay-amount-wrap {
+  margin-top: 16rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rpx;
+}
+.pay-amount-label {
+  font-size: 24rpx;
+  color: #999;
+}
+.pay-amount-value {
+  font-size: 56rpx;
+  font-weight: bold;
+  color: #222;
+  letter-spacing: 2rpx;
+}
+
+/* 密码圆点 */
+.pwd-dots {
+  display: flex;
+  background: #fff;
+  margin: 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+.pwd-cell {
+  flex: 1;
+  height: 100rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1rpx solid #ebebeb;
+}
+.pwd-cell:last-child { border-right: none; }
+.pwd-dot {
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 50%;
+  background: transparent;
+  border: 2rpx solid #ddd;
+  transition: background 0.1s;
+}
+.pwd-dot.filled {
+  background: #222;
+  border-color: #222;
+}
+
+/* 错误提示 */
+.pwd-error {
+  text-align: center;
+  font-size: 24rpx;
+  color: #ff4444;
+  padding: 12rpx 0 0;
+  min-height: 40rpx;
+  background: #fff;
+}
+
+/* 忘记密码 */
+.pwd-hint-row {
+  background: #fff;
+  text-align: center;
+  padding: 8rpx 0 16rpx;
+  margin-bottom: 16rpx;
+}
+.pwd-hint {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 键盘 */
+.keyboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rpx;
+  background: #d1d3d8;
+}
+.key-btn {
+  background: #fff;
+  height: 120rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  color: #333;
+  font-weight: 500;
+  transition: background 0.1s;
+  user-select: none;
+}
+.key-btn:active { background: #e8e8e8; }
+.key-empty {
+  background: #d1d3d8;
+  cursor: default;
+}
+.key-empty:active { background: #d1d3d8; }
+.key-del {
+  background: #d1d3d8;
+  font-size: 44rpx;
+  color: #555;
+}
+.key-del:active { background: #bfc1c7; }

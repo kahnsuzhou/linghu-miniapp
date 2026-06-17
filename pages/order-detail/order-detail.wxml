@@ -105,4 +105,15 @@
     <text class="empty-title">订单加载失败</text>
   </view>
 
+  <!-- 支付密码键盘 -->
+  <pay-keyboard
+    id="payKeyboard"
+    show="{{showPayKeyboard}}"
+    title="输入支付密码"
+    amount="{{order.priceStr}}"
+    bind:confirm="onPayConfirm"
+    bind:cancel="onPayCancel"
+    bind:forgot="onPayForgot"
+  />
+
 </view>

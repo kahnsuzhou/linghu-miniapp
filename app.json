@@ -8,7 +8,8 @@
     "pages/profile/profile",
     "pages/coupons/coupons",
     "pages/address/address",
-    "pages/address-edit/address-edit"
+    "pages/address-edit/address-edit",
+    "pages/pay-password/pay-password"
   ],
   "window": {
     "backgroundTextStyle": "light",

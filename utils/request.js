@@ -99,8 +99,10 @@ const api = {
   pickupCodes:  ()           => request('/api/consumer/order/pickup-codes', 'GET', {}),
 
   // ── 支付 ────────────────────────────────────────────────────
-  walletPay:    (body)       => request('/api/wallet/pay', 'POST', body),
-  walletInfo:   ()           => request('/api/wallet/info', 'GET', {}),
+  walletPay:         (body)  => request('/api/wallet/pay', 'POST', body),
+  walletPayWithPwd:  (body)  => request('/api/wallet/pay-with-password', 'POST', body),
+  walletSetPassword: (pwd)   => request('/api/wallet/set-pay-password', 'POST', { password: pwd }),
+  walletInfo:        ()      => request('/api/wallet/info', 'GET', {}),
   // 模拟支付：orderId 通过 URL 参数传递（后端用 @RequestParam）
   mockPay:      (body)       => request(`/api/consumer/order/pay-callback?orderId=${body.orderId}`, 'POST', {}),
 

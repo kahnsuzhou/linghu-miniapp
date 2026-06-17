@@ -43,6 +43,12 @@ Page({
 
     // 备注
     remark: '',
+
+    // 支付密码键盘
+    showPayKeyboard: false,
+    pendingOrderId: null,   // 下单成功后等待支付的订单ID
+    walletBalance: null,    // 钱包余额（展示用）
+    hasPayPassword: false,  // 是否已设置支付密码
   },
 
   onLoad(options) {
@@ -66,6 +72,7 @@ Page({
     });
     this._loadProduct(productId, warehouseId);
     this._loadAddresses();
+    this._loadWalletInfo();
   },
 
   onShow() {
@@ -126,6 +133,15 @@ Page({
         this.setData({ loading: false });
         wx.showToast({ title: '加载失败', icon: 'error' });
       });
+  },
+
+  _loadWalletInfo() {
+    api.walletInfo().then(info => {
+      this.setData({
+        walletBalance: info.available ?? info.balance ?? 0,
+        hasPayPassword: info.hasPayPassword || false,
+      });
+    }).catch(() => {});
   },
 
   _loadAddresses() {
@@ -236,17 +252,75 @@ Page({
         const orderRes = res.data || res;
         const orderId = orderRes.orderId || orderRes.id;
         if (selectedCoupon) couponUtil.useCoupon(selectedCoupon.id);
-        if (orderRes.payInfo) {
-          this._wxPay(orderRes.payInfo, orderId);
-        } else {
-          this._mockPay(orderId);
-        }
+
+        // 下单成功，弹出支付密码键盘
+        this.setData({ submitting: false, pendingOrderId: orderId, showPayKeyboard: true });
       })
       .catch(err => {
         wx.hideLoading();
         this.setData({ submitting: false });
         wx.showToast({ title: (err && err.message) || '下单失败，请重试', icon: 'none', duration: 2500 });
       });
+  },
+
+  // 支付密码键盘：输入完成
+  onPayConfirm(e) {
+    const { password } = e.detail;
+    const { pendingOrderId, hasPayPassword } = this.data;
+
+    // 如果未设置支付密码，引导先设置
+    if (!hasPayPassword) {
+      wx.showModal({
+        title: '未设置支付密码',
+        content: '请先前往「我的」→「收货地址」页面旁的钱包设置支付密码',
+        showCancel: false,
+        confirmText: '我知道了',
+      });
+      this.setData({ showPayKeyboard: false });
+      return;
+    }
+
+    wx.showLoading({ title: '支付中...' });
+    api.walletPayWithPwd({ orderId: pendingOrderId, password })
+      .then(() => {
+        wx.hideLoading();
+        this.setData({ showPayKeyboard: false });
+        wx.showToast({ title: '支付成功', icon: 'success' });
+        setTimeout(() => {
+          wx.navigateTo({ url: `/pages/order-detail/order-detail?id=${pendingOrderId}` });
+        }, 800);
+      })
+      .catch(err => {
+        wx.hideLoading();
+        // 通知组件显示错误并清空输入
+        this.selectComponent('#payKeyboard').showError(
+          (err && err.message) || '支付失败，请重试'
+        );
+      });
+  },
+
+  // 支付密码键盘：取消
+  onPayCancel() {
+    this.setData({ showPayKeyboard: false });
+    // 已下单但未支付，跳转订单详情让用户稍后支付
+    const { pendingOrderId } = this.data;
+    if (pendingOrderId) {
+      wx.showModal({
+        title: '订单已创建',
+        content: '订单已生成但尚未支付，可在「我的订单」中继续支付',
+        showCancel: false,
+        confirmText: '查看订单',
+        success: () => {
+          wx.navigateTo({ url: `/pages/order-detail/order-detail?id=${pendingOrderId}` });
+        },
+      });
+    }
+  },
+
+  // 忘记支付密码
+  onPayForgot() {
+    this.setData({ showPayKeyboard: false });
+    wx.showToast({ title: '请前往我的→钱包重新设置支付密码', icon: 'none', duration: 3000 });
   },
 
   _wxPay(payInfo, orderId) {

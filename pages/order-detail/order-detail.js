@@ -2,12 +2,16 @@
 const { api } = require('../../utils/request');
 const { formatPrice, formatTime, orderStatusInfo, formatPickupCode, firstImage } = require('../../utils/util');
 
+
 Page({
   data: {
     orderId: null,
     order: null,
     loading: true,
     showPickupCode: false,
+    showPayKeyboard: false,
+    hasPayPassword: false,
+    walletBalance: null,
   },
 
   onLoad(options) {
@@ -19,6 +23,7 @@ Page({
     }
     this.setData({ orderId: id });
     this._loadOrder(id);
+    this._loadWalletInfo();
   },
 
   onShow() {
@@ -64,6 +69,15 @@ Page({
       });
   },
 
+  _loadWalletInfo() {
+    api.walletInfo().then(info => {
+      this.setData({
+        walletBalance: info.available ?? info.balance ?? 0,
+        hasPayPassword: info.hasPayPassword || false,
+      });
+    }).catch(() => {});
+  },
+
   copyOrderSn() {
     const sn = this.data.order?.orderSn;
     if (!sn) return;
@@ -107,20 +121,50 @@ Page({
   },
 
   payOrder() {
-    const { orderId, order } = this.data;
+    const { order } = this.data;
     if (!order || order.status !== 'PENDING_PAYMENT') return;
+    // 弹出支付密码键盘
+    this.setData({ showPayKeyboard: true });
+  },
+
+  onPayConfirm(e) {
+    const { password } = e.detail;
+    const { orderId, hasPayPassword } = this.data;
+
+    if (!hasPayPassword) {
+      wx.showModal({
+        title: '未设置支付密码',
+        content: '请先前往「我的」→「钱包」设置支付密码',
+        showCancel: false,
+        confirmText: '我知道了',
+      });
+      this.setData({ showPayKeyboard: false });
+      return;
+    }
+
     wx.showLoading({ title: '支付中...' });
-    // 开发环境 mock 支付
-    api.mockPay({ orderId })
+    api.walletPayWithPwd({ orderId: parseInt(orderId), password })
       .then(() => {
         wx.hideLoading();
+        this.setData({ showPayKeyboard: false });
         wx.showToast({ title: '支付成功', icon: 'success' });
         setTimeout(() => this._loadOrder(orderId), 800);
       })
-      .catch(() => {
+      .catch(err => {
         wx.hideLoading();
-        wx.showToast({ title: '支付失败，请重试', icon: 'error' });
+        this.selectComponent('#payKeyboard').showError(
+          (err && err.message) || '支付失败，请重试'
+        );
       });
+  },
+
+  onPayCancel() {
+    this.setData({ showPayKeyboard: false });
+  },
+
+  onPayForgot() {
+    this.setData({ showPayKeyboard: false });
+    wx.showToast({ title: '请前往我的→钱包重新设置支付密码', icon: 'none', duration: 3000 });
   },
 
   contactService() {

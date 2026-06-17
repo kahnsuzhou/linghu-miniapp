@@ -192,4 +192,15 @@
     </scroll-view>
   </view>
 
+  <!-- 支付密码键盘 -->
+  <pay-keyboard
+    id="payKeyboard"
+    show="{{showPayKeyboard}}"
+    title="输入支付密码"
+    amount="{{finalAmount}}"
+    bind:confirm="onPayConfirm"
+    bind:cancel="onPayCancel"
+    bind:forgot="onPayForgot"
+  />
+
 </view>
