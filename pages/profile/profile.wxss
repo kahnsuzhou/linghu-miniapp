@@ -163,3 +163,11 @@
   justify-content: center;
 }
 .btn-logout::after { border: none; }
+
+/* 钱包余额标签 */
+.menu-balance {
+  font-size: 24rpx;
+  color: #FF6B35;
+  font-weight: bold;
+  margin-right: 8rpx;
+}

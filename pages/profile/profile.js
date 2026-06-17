@@ -1,11 +1,13 @@
 // pages/profile/profile.js
 const couponUtil = require('../../utils/coupon');
+const { api } = require('../../utils/request');
 
 Page({
   data: {
     userInfo: null,
     isLoggedIn: false,
     couponCount: 0,
+    walletBalance: null,
 
     // 订单快捷入口
     orderTabs: [
@@ -22,6 +24,13 @@ Page({
     const isLoggedIn = !!token;
     const couponCount = isLoggedIn ? couponUtil.getMyCoupons().length : 0;
     this.setData({ userInfo, isLoggedIn, couponCount });
+    if (isLoggedIn) this._loadWalletBalance();
+  },
+
+  _loadWalletBalance() {
+    api.walletInfo().then(info => {
+      this.setData({ walletBalance: Number(info.available ?? info.balance ?? 0).toFixed(2) });
+    }).catch(() => {});
   },
 
   doLogin() {
@@ -75,6 +84,15 @@ Page({
       return;
     }
     wx.navigateTo({ url: '/pages/coupons/coupons' });
+  },
+
+  goWallet() {
+    const app = getApp();
+    if (!app.globalData.token) {
+      wx.showToast({ title: '请先登录', icon: 'none' });
+      return;
+    }
+    wx.navigateTo({ url: '/pages/wallet/wallet' });
   },
 
   goAddress() {

@@ -152,9 +152,21 @@ Page({
       })
       .catch(err => {
         wx.hideLoading();
-        this.selectComponent('#payKeyboard').showError(
-          (err && err.message) || '支付失败，请重试'
-        );
+        const msg = (err && err.message) || '支付失败，请重试';
+        if (msg.includes('余额不足')) {
+          this.setData({ showPayKeyboard: false });
+          wx.showModal({
+            title: '余额不足',
+            content: msg + '\n\n前往钱包充值后再支付',
+            confirmText: '去充值',
+            cancelText: '稍后再说',
+            success: (res) => {
+              if (res.confirm) wx.navigateTo({ url: '/pages/wallet/wallet' });
+            },
+          });
+        } else {
+          this.selectComponent('#payKeyboard').showError(msg);
+        }
       });
   },
 

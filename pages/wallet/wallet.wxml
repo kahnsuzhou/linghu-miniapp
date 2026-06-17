@@ -1,0 +1,100 @@
+<!-- pages/wallet/wallet.wxml -->
+<view class="container">
+
+  <!-- 余额卡片 -->
+  <view class="balance-card">
+    <view class="balance-label">可用余额（元）</view>
+    <view class="balance-amount">
+      <text class="balance-symbol">¥</text>
+      <text class="balance-number">{{balance}}</text>
+    </view>
+    <view class="balance-sub">
+      <text>冻结：¥{{frozen}}</text>
+    </view>
+    <!-- 充值按钮 -->
+    <view class="recharge-btn" bindtap="openRecharge">
+      <text>+ 充值</text>
+    </view>
+  </view>
+
+  <!-- 快捷充值金额 -->
+  <view class="quick-amounts" wx:if="{{showRecharge}}">
+    <view class="section-title-row">
+      <text class="section-title">选择充值金额</text>
+      <text class="section-close" bindtap="closeRecharge">×</text>
+    </view>
+    <view class="amount-grid">
+      <view wx:for="{{quickAmounts}}" wx:key="*this"
+        class="amount-item {{selectedAmount === item ? 'active' : ''}}"
+        bindtap="selectAmount" data-val="{{item}}">
+        ¥{{item}}
+      </view>
+    </view>
+    <view class="custom-amount-row">
+      <text class="custom-label">其他金额</text>
+      <input class="custom-input" type="digit" placeholder="请输入金额"
+        value="{{customAmount}}" bindinput="onCustomInput" />
+      <text class="custom-unit">元</text>
+    </view>
+    <view class="recharge-tip">测试环境：充值直接到账，无需真实付款</view>
+    <button class="btn-confirm {{recharging ? 'loading' : ''}}"
+      bindtap="doRecharge" disabled="{{recharging}}">
+      {{recharging ? '充值中...' : '立即充值 ¥' + finalAmount}}
+    </button>
+  </view>
+
+  <!-- 设置支付密码入口 -->
+  <view class="menu-row" bindtap="goSetPassword" wx:if="{{!hasPayPassword}}">
+    <view class="menu-row-left">
+      <text class="menu-icon">🔐</text>
+      <view>
+        <text class="menu-label">设置支付密码</text>
+        <text class="menu-desc">支付订单时需要输入</text>
+      </view>
+    </view>
+    <text class="menu-arrow orange">去设置 ›</text>
+  </view>
+  <view class="menu-row" bindtap="goSetPassword" wx:else>
+    <view class="menu-row-left">
+      <text class="menu-icon">🔐</text>
+      <text class="menu-label">修改支付密码</text>
+    </view>
+    <text class="menu-arrow">›</text>
+  </view>
+
+  <!-- 流水记录 -->
+  <view class="section-card">
+    <view class="section-title-row">
+      <text class="section-title">交易记录</text>
+    </view>
+
+    <view wx:if="{{loadingTx}}" class="tx-loading">加载中...</view>
+
+    <view wx:elif="{{txList.length === 0}}" class="tx-empty">
+      <text>暂无交易记录</text>
+    </view>
+
+    <view wx:else>
+      <view wx:for="{{txList}}" wx:key="id" class="tx-item">
+        <view class="tx-left">
+          <text class="tx-type">{{item.typeText}}</text>
+          <text class="tx-time">{{item.createTime}}</text>
+        </view>
+        <view class="tx-right">
+          <text class="tx-amount {{item.amount > 0 ? 'income' : 'expense'}}">
+            {{item.amount > 0 ? '+' : ''}}¥{{item.amount}}
+          </text>
+          <text class="tx-balance">余额 ¥{{item.balanceAfter}}</text>
+        </view>
+      </view>
+
+      <!-- 加载更多 -->
+      <view wx:if="{{hasMore}}" class="load-more" bindtap="loadMore">
+        {{loadingMore ? '加载中...' : '加载更多'}}
+      </view>
+      <view wx:else class="no-more">已经到底了</view>
+    </view>
+  </view>
+
+  <view style="height: 60rpx;"></view>
+</view>

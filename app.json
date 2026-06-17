@@ -9,7 +9,8 @@
     "pages/coupons/coupons",
     "pages/address/address",
     "pages/address-edit/address-edit",
-    "pages/pay-password/pay-password"
+    "pages/pay-password/pay-password",
+    "pages/wallet/wallet"
   ],
   "window": {
     "backgroundTextStyle": "light",
