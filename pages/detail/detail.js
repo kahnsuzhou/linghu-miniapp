@@ -13,13 +13,13 @@ Page({
   },
 
   onLoad(options) {
-    const { id } = options;
+    const id = options.id || options.productId  // 兼容两种传参
     if (!id) {
       wx.showToast({ title: '参数错误', icon: 'error' });
       setTimeout(() => wx.navigateBack(), 1000);
       return;
     }
-    this.setData({ productId: id });
+    this.setData({ productId: id, warehouseId: options.warehouseId || null });
     this._loadDetail(id);
   },
 

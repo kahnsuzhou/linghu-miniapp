@@ -46,7 +46,7 @@
         wx:for="{{products}}"
         wx:key="productId"
         bindtap="onProductTap"
-        data-product-id="{{item.productId}}"
+        data-id="{{item.productId}}"
         data-warehouse-id="{{item.warehouseId}}"
       >
         <!-- 商品图 -->

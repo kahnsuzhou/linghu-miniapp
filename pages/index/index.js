@@ -105,9 +105,9 @@ Page({
   },
 
   onProductTap(e) {
-    const { productId, warehouseId } = e.currentTarget.dataset
+    const { id, warehouseId } = e.currentTarget.dataset
     wx.navigateTo({
-      url: `/pages/detail/detail?productId=${productId}&warehouseId=${warehouseId}`
+      url: `/pages/detail/detail?id=${id}&warehouseId=${warehouseId}`
     })
   },
 
