@@ -6,7 +6,9 @@
     "pages/order/order",
     "pages/order-detail/order-detail",
     "pages/profile/profile",
-    "pages/coupons/coupons"
+    "pages/coupons/coupons",
+    "pages/address/address",
+    "pages/address-edit/address-edit"
   ],
   "window": {
     "backgroundTextStyle": "light",

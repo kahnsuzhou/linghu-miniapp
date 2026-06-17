@@ -103,6 +103,13 @@ const api = {
   walletInfo:   ()           => request('/api/wallet/info', 'GET', {}),
   // 模拟支付：orderId 通过 URL 参数传递（后端用 @RequestParam）
   mockPay:      (body)       => request(`/api/consumer/order/pay-callback?orderId=${body.orderId}`, 'POST', {}),
+
+  // ── 收货地址 ─────────────────────────────────────────────────
+  addressList:   ()          => request('/api/address/list', 'GET', {}),
+  addressAdd:    (body)      => request('/api/address/add', 'POST', body),
+  addressUpdate: (id, body)  => request(`/api/address/update/${id}`, 'PUT', body),
+  addressDel:    (id)        => request(`/api/address/${id}`, 'DELETE', {}),
+  addressSetDef: (id)        => request(`/api/address/set-default/${id}`, 'POST', {}),
 }
 
 module.exports = { request, api }

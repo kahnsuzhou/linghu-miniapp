@@ -41,6 +41,78 @@
 .section-icon { font-size: 28rpx; }
 .section-title { font-size: 28rpx; font-weight: bold; color: #222; }
 
+/* 配送方式 Tabs */
+.delivery-tabs {
+  display: flex;
+  gap: 16rpx;
+}
+.delivery-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx 0;
+  border-radius: 16rpx;
+  border: 2rpx solid #e0e0e0;
+  background: #fafafa;
+  transition: all 0.2s;
+}
+.delivery-tab.active {
+  border-color: #FF6B35;
+  background: #fff3ed;
+}
+.tab-icon { font-size: 36rpx; margin-bottom: 6rpx; }
+.tab-label {
+  font-size: 24rpx;
+  color: #666;
+}
+.delivery-tab.active .tab-label {
+  color: #FF6B35;
+  font-weight: bold;
+}
+
+/* 收货地址 */
+.addr-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8rpx 0;
+}
+.addr-info { flex: 1; }
+.addr-top {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 8rpx;
+}
+.addr-name { font-size: 28rpx; font-weight: bold; color: #222; }
+.addr-phone { font-size: 26rpx; color: #555; }
+.addr-detail { font-size: 24rpx; color: #999; line-height: 1.5; }
+
+.addr-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  padding: 32rpx 0;
+  border: 2rpx dashed #e0e0e0;
+  border-radius: 16rpx;
+}
+.addr-empty-icon { font-size: 40rpx; color: #FF6B35; font-weight: 300; }
+.addr-empty-text { font-size: 28rpx; color: #FF6B35; }
+
+.addr-change-row {
+  margin-top: 16rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #f5f5f5;
+  text-align: right;
+}
+.addr-change-btn {
+  font-size: 24rpx;
+  color: #FF6B35;
+}
+
 /* 自提地点 */
 .pickup-row {
   display: flex;

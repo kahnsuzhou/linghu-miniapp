@@ -1,0 +1,33 @@
+/* pages/address-edit/address-edit.wxss */
+.container { background: #f5f5f5; min-height: 100vh; padding-bottom: 120rpx; }
+
+.form-card { background: #fff; margin: 20rpx 16rpx; border-radius: 16rpx; overflow: hidden; }
+
+.form-item {
+  display: flex; align-items: center; padding: 28rpx 24rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+.form-item:last-child { border-bottom: none; }
+
+.label { width: 140rpx; font-size: 28rpx; color: #333; flex-shrink: 0; }
+
+.input {
+  flex: 1; font-size: 28rpx; color: #333; height: 44rpx;
+}
+
+.region-wrap { flex: 1; display: flex; justify-content: space-between; align-items: center; }
+.region-text { font-size: 28rpx; color: #333; }
+.region-text.placeholder { color: #bbb; }
+.arrow { font-size: 32rpx; color: #ccc; }
+
+.save-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  padding: 16rpx 32rpx; background: #fff;
+  box-shadow: 0 -2rpx 12rpx rgba(0,0,0,0.08);
+}
+.btn-save {
+  width: 100%; height: 88rpx; background: #FF6B35; color: #fff;
+  border-radius: 44rpx; font-size: 30rpx; border: none;
+}
+.btn-save::after { border: none; }
+.btn-save[disabled] { opacity: 0.6; }

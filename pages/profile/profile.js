@@ -77,6 +77,15 @@ Page({
     wx.navigateTo({ url: '/pages/coupons/coupons' });
   },
 
+  goAddress() {
+    const app = getApp();
+    if (!app.globalData.token) {
+      wx.showToast({ title: '请先登录', icon: 'none' });
+      return;
+    }
+    wx.navigateTo({ url: '/pages/address/address' });
+  },
+
   goAbout() {
     wx.showModal({
       title: '关于灵狐近选',

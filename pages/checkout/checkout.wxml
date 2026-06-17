@@ -10,8 +10,28 @@
 
   <block wx:elif="{{product}}">
 
-    <!-- 自提地址卡 -->
+    <!-- ① 配送方式 Tabs -->
     <view class="section-card">
+      <view class="section-header">
+        <text class="section-icon">🚚</text>
+        <text class="section-title">配送方式</text>
+      </view>
+      <view class="delivery-tabs">
+        <view
+          wx:for="{{deliveryModes}}"
+          wx:key="key"
+          class="delivery-tab {{selectedMode === item.key ? 'active' : ''}}"
+          bindtap="selectMode"
+          data-mode="{{item.key}}"
+        >
+          <text class="tab-icon">{{item.icon}}</text>
+          <text class="tab-label">{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- ② 自提仓库（selectedMode === 'pickup'） -->
+    <view class="section-card" wx:if="{{selectedMode === 'pickup'}}">
       <view class="section-header">
         <text class="section-icon">📍</text>
         <text class="section-title">自提地点</text>
@@ -33,6 +53,39 @@
           <text class="pickup-name">{{selectedWarehouse.name || '附近仓库'}}</text>
           <text class="pickup-addr">{{selectedWarehouse.address || '地址加载中'}}</text>
         </view>
+      </view>
+    </view>
+
+    <!-- ③ 收货地址（同城配送 / 快递） -->
+    <view class="section-card" wx:if="{{selectedMode !== 'pickup'}}">
+      <view class="section-header">
+        <text class="section-icon">📮</text>
+        <text class="section-title">收货地址</text>
+      </view>
+
+      <!-- 已有选中地址 -->
+      <view wx:if="{{selectedAddress}}" class="addr-row" bindtap="goChooseAddress">
+        <view class="addr-info">
+          <view class="addr-top">
+            <text class="addr-name">{{selectedAddress.receiverName || selectedAddress.name}}</text>
+            <text class="addr-phone">{{selectedAddress.phone}}</text>
+          </view>
+          <text class="addr-detail">
+            {{selectedAddress.province}}{{selectedAddress.city}}{{selectedAddress.district}}{{selectedAddress.detail}}
+          </text>
+        </view>
+        <text class="picker-arrow">›</text>
+      </view>
+
+      <!-- 无地址，引导新增 -->
+      <view wx:else class="addr-empty" bindtap="goAddAddress">
+        <text class="addr-empty-icon">＋</text>
+        <text class="addr-empty-text">添加收货地址</text>
+      </view>
+
+      <!-- 切换地址入口（已有地址时显示） -->
+      <view wx:if="{{selectedAddress}}" class="addr-change-row" bindtap="goChooseAddress">
+        <text class="addr-change-btn">切换地址</text>
       </view>
     </view>
 
