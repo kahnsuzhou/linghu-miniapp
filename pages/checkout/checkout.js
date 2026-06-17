@@ -6,6 +6,7 @@ const couponUtil = require('../../utils/coupon');
 Page({
   data: {
     productId: null,
+    warehouseId: null,
     quantity: 1,
     product: null,
     loading: true,
@@ -31,7 +32,7 @@ Page({
   },
 
   onLoad(options) {
-    const { productId, quantity } = options;
+    const { productId, quantity, warehouseId } = options;
     if (!productId) {
       wx.showToast({ title: '参数错误', icon: 'error' });
       setTimeout(() => wx.navigateBack(), 1000);
@@ -46,25 +47,28 @@ Page({
 
     this.setData({
       productId,
+      warehouseId: warehouseId ? parseInt(warehouseId) : null,
       quantity: parseInt(quantity) || 1,
     });
-    this._loadProduct(productId);
+    this._loadProduct(productId, warehouseId);
   },
 
-  _loadProduct(id) {
+  _loadProduct(id, warehouseId) {
     api.productDetail(id)
       .then(res => {
         const p = res.data || res;
         const thumb = (allImages(p.images || p.imageList))[0] || '';
         const product = {
           ...p,
+          id: p.id || p.productId,
           thumb,
           priceStr: formatPrice(p.price),
         };
         const totalAmount = p.price * this.data.quantity;
-        // 可选仓库
+        // 优先用从详情页传来的 warehouseId
+        const wid = warehouseId ? parseInt(warehouseId) : (p.warehouseId || 1);
         const warehouses = p.pickupLocations || p.warehouses || [
-          { id: p.warehouseId, name: p.warehouseName || '附近仓库', address: p.warehouseAddress || '' }
+          { id: wid, name: p.warehouseName || '附近仓库', address: p.warehouseAddress || '' }
         ];
         this.setData({
           product,
@@ -143,7 +147,8 @@ Page({
     wx.showLoading({ title: '提交中...' });
 
     const pid = product.id || product.productId;
-    const wid = selectedWarehouse.id || selectedWarehouse.warehouseId;
+    const wid = selectedWarehouse.id || selectedWarehouse.warehouseId || this.data.warehouseId || 1;
+    console.log('[下单] productId:', pid, 'warehouseId:', wid, 'quantity:', quantity);
     const orderData = {
       items: [{ productId: pid, quantity, warehouseId: wid }],  // 每个item需带warehouseId
       deliveryMode: 'pickup',

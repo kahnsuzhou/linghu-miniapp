@@ -93,10 +93,11 @@ Page({
       wx.showToast({ title: '商品已售罄', icon: 'none' });
       return;
     }
-    const { product, quantity } = this.data;
-    const pid = product.id || product.productId;  // 兼容字段名
+    const { product, quantity, warehouseId } = this.data;
+    const pid = product.id || product.productId;
+    const wid = warehouseId || product.warehouseId || 1;  // 透传仓库ID
     wx.navigateTo({
-      url: `/pages/checkout/checkout?productId=${pid}&quantity=${quantity}`,
+      url: `/pages/checkout/checkout?productId=${pid}&quantity=${quantity}&warehouseId=${wid}`,
     });
   },
 
