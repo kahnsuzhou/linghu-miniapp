@@ -54,9 +54,11 @@
         <view class="card-footer">
           <text class="order-time">{{item.timeStr}}</text>
           <view class="card-actions" catchtap="stopPropagation">
-            <!-- 待付款：可取消 -->
-            <button wx:if="{{item.status === 'PENDING_PAYMENT'}}" class="btn-outline"
-              catchtap="cancelOrder" data-id="{{item.id}}">取消</button>
+            <!-- 待付款：可取消+支付（兼容 PENDING_PAY / PENDING_PAYMENT） -->
+            <button wx:if="{{item.status === 'PENDING_PAYMENT' || item.status === 'PENDING_PAY'}}"
+              class="btn-outline" catchtap="cancelOrder" data-id="{{item.id}}">取消</button>
+            <button wx:if="{{item.status === 'PENDING_PAYMENT' || item.status === 'PENDING_PAY'}}"
+              class="btn-primary" catchtap="goDetail" data-id="{{item.id}}">去支付</button>
             <!-- 待自提：查看自提码 -->
             <button wx:if="{{item.status === 'PENDING_DELIVERY' || item.status === 'DELIVERING'}}"
               class="btn-primary" catchtap="goDetail" data-id="{{item.id}}">查看自提码</button>

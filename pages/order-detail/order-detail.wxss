@@ -161,7 +161,7 @@
   display: flex;
   gap: 16rpx;
 }
-.btn-service, .btn-cancel {
+.btn-service, .btn-cancel, .btn-pay {
   flex: 1;
   height: 80rpx;
   border-radius: 40rpx;
@@ -170,7 +170,11 @@
   align-items: center;
   justify-content: center;
 }
-.btn-service::after, .btn-cancel::after { border: none; }
+.btn-service::after, .btn-cancel::after, .btn-pay::after { border: none; }
+.btn-pay {
+  background: #FF6B35;
+  color: #fff;
+}
 .btn-service {
   background: #fff;
   color: #666;

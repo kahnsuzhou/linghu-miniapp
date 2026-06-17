@@ -31,18 +31,27 @@ Page({
         const o = res.data || res;
         const statusInfo = orderStatusInfo(o.status);
         const items = o.items || o.orderItems || [];
+        const firstItem = items[0] || {};
+        // 仓库信息从 items 里取
+        const warehouseName = o.warehouseName || firstItem.warehouseName || '灵狐仓库';
+        const warehouseAddress = o.warehouseAddress || firstItem.warehouseAddress || '';
+        // 兼容 PENDING_PAY / PENDING_PAYMENT 两种状态名
+        const normalizedStatus = o.status === 'PENDING_PAY' ? 'PENDING_PAYMENT' : o.status;
         const order = {
           ...o,
+          status: normalizedStatus,
+          warehouseName,
+          warehouseAddress,
           statusLabel: statusInfo.label,
           statusColor: statusInfo.color,
           statusDesc: statusInfo.desc || '',
           priceStr: formatPrice(o.totalAmount || o.actualAmount),
           timeStr: formatTime(o.createdAt || o.createTime),
           pickupCodeDisplay: o.pickUpCode ? formatPickupCode(o.pickUpCode) : '',
-          showPickup: (o.status === 'PENDING_DELIVERY' || o.status === 'DELIVERING') && o.pickUpCode,
+          showPickup: (normalizedStatus === 'PENDING_DELIVERY' || normalizedStatus === 'DELIVERING') && o.pickUpCode,
           itemList: items.map(item => ({
             ...item,
-            thumb: firstImage(item.images || item.imageList) || item.imageUrl || '',
+            thumb: firstImage(item.productImage || item.images || item.imageList) || item.imageUrl || '',
             priceStr: formatPrice(item.price),
           })),
         };
@@ -95,6 +104,23 @@ Page({
           });
       },
     });
+  },
+
+  payOrder() {
+    const { orderId, order } = this.data;
+    if (!order || order.status !== 'PENDING_PAYMENT') return;
+    wx.showLoading({ title: '支付中...' });
+    // 开发环境 mock 支付
+    api.mockPay({ orderId })
+      .then(() => {
+        wx.hideLoading();
+        wx.showToast({ title: '支付成功', icon: 'success' });
+        setTimeout(() => this._loadOrder(orderId), 800);
+      })
+      .catch(() => {
+        wx.hideLoading();
+        wx.showToast({ title: '支付失败，请重试', icon: 'error' });
+      });
   },
 
   contactService() {

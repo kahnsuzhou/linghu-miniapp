@@ -80,14 +80,18 @@ Page({
   },
 
   _mapOrder(o) {
-    const statusInfo = orderStatusInfo(o.status);
+    // 统一状态名：PENDING_PAY → PENDING_PAYMENT
+    const status = o.status === 'PENDING_PAY' ? 'PENDING_PAYMENT' : o.status;
+    const statusInfo = orderStatusInfo(status);
     const items = o.items || o.orderItems || [];
     const firstItem = items[0] || {};
     return {
       ...o,
+      id: o.id || o.orderId,   // 兼容 id/orderId 字段
+      status,
       statusLabel: statusInfo.label,
       statusColor: statusInfo.color,
-      thumb: firstImage(firstItem.images || firstItem.imageList) || firstItem.imageUrl || '',
+      thumb: firstImage(firstItem.productImage || firstItem.images || firstItem.imageList) || firstItem.imageUrl || '',
       itemName: firstItem.productName || firstItem.name || '商品',
       itemCount: items.length,
       priceStr: formatPrice(o.totalAmount || o.actualAmount),
