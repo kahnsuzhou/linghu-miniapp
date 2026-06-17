@@ -143,7 +143,7 @@ Page({
     wx.showLoading({ title: '提交中...' });
 
     const orderData = {
-      productId: product.id,
+      productId: product.id || product.productId,  // 兼容字段名
       quantity,
       warehouseId: selectedWarehouse.id,
       deliveryMode: 'pickup',

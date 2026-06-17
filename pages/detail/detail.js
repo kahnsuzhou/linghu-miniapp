@@ -38,6 +38,7 @@ Page({
         this.setData({
           product: {
             ...p,
+            id: p.id || p.productId,  // 统一字段名
             imageList: images,
             priceStr: formatPrice(p.price),
             originalPriceStr: p.originalPrice ? formatPrice(p.originalPrice) : null,
@@ -93,8 +94,9 @@ Page({
       return;
     }
     const { product, quantity } = this.data;
+    const pid = product.id || product.productId;  // 兼容字段名
     wx.navigateTo({
-      url: `/pages/checkout/checkout?productId=${product.id}&quantity=${quantity}`,
+      url: `/pages/checkout/checkout?productId=${pid}&quantity=${quantity}`,
     });
   },
 
