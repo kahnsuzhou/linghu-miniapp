@@ -28,13 +28,16 @@ function request(url, method = 'GET', data = {}, auth = true) {
       header['Authorization'] = `Bearer ${app.globalData.token}`
     }
 
+    const fullUrl = BASE_URL + url
+    console.log(`[REQ] ${method} ${fullUrl}`)
     wx.request({
-      url: BASE_URL + url,
+      url: fullUrl,
       method,
       data,
       header,
       timeout: 15000,
       success(res) {
+        console.log(`[RES] ${method} ${fullUrl} → ${res.statusCode}`)
         const body = res.data
         if (res.statusCode === 401) {
           wx.removeStorageSync('token')
@@ -57,6 +60,7 @@ function request(url, method = 'GET', data = {}, auth = true) {
         }
       },
       fail(err) {
+        console.error(`[FAIL] ${method} ${fullUrl}`, err)
         wx.showToast({ title: '网络错误，请检查连接', icon: 'none' })
         reject(err)
       }
